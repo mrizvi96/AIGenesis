@@ -1,0 +1,112 @@
+{
+  "overall_success": true,
+  "success_rate_percent": 83.33333333333334,
+  "total_test_time": 34.46977472305298,
+  "tests_run": 6,
+  "tests_passed": 5,
+  "tests_failed": 1,
+  "peak_memory_mb": 512.3203125,
+  "memory_limit_mb": 1024,
+  "within_memory_limit": true,
+  "initial_memory_mb": 466.18359375,
+  "final_memory_mb": 512.3203125,
+  "component_results": {
+    "memory_manager": {
+      "success": true,
+      "compression_original_dims": 512,
+      "compression_final_dims": 512,
+      "compression_ratio": 1.0,
+      "allocation_available": true,
+      "cloud_optimization_active": false,
+      "processing_time": 1.0685081481933594,
+      "memory_before": 466.18359375,
+      "memory_after": 466.30078125,
+      "memory_peak": 466.30078125
+    },
+    "qdrant_manager": {
+      "success": false,
+      "connection_success": true,
+      "batch_insert_success": false,
+      "search_success": false,
+      "vectors_processed": 0,
+      "memory_usage_mb": 0,
+      "performance_metrics": {
+        "error": "'QdrantManager' object has no attribute 'modalities'"
+      },
+      "processing_time": 7.912782907485962,
+      "memory_before": 466.30078125,
+      "memory_after": 466.4140625,
+      "memory_peak": 466.4140625
+    },
+    "classifier": {
+      "success": true,
+      "classification_success": true,
+      "keyword_fallback_success": true,
+      "fraud_probability": 0.0,
+      "complexity_score": 0.0,
+      "model_loaded": true,
+      "memory_usage_mb": 511.53125,
+      "model_unloaded_after_timeout": false,
+      "processing_time": 2.409902572631836,
+      "memory_before": 466.4140625,
+      "memory_after": 511.53125,
+      "memory_peak": 511.53125
+    },
+    "vision_processor": {
+      "success": true,
+      "processing_mode": "local_bulk",
+      "decision_confidence": 0.7,
+      "api_quota_remaining": 500,
+      "memory_usage_mb": 511.57421875,
+      "model_loaded": true,
+      "images_processed": 2,
+      "cost_estimate": 0.0,
+      "cloud_cpu_impact": "medium",
+      "processing_time": 2.0294687747955322,
+      "memory_before": 511.53125,
+      "memory_after": 511.57421875,
+      "memory_peak": 511.57421875
+    },
+    "fusion_processor": {
+      "success": true,
+      "final_dimensions": 32,
+      "target_dimensions": 0,
+      "compression_ratio": 0,
+      "batches_processed": 0,
+      "memory_optimization_active": false,
+      "processed_count": 1,
+      "cleanup_count": 2,
+      "processing_time": 3.31662917137146,
+      "memory_before": 511.57421875,
+      "memory_after": 511.60546875,
+      "memory_peak": 511.60546875
+    },
+    "feature_generator": {
+      "success": true,
+      "total_features": 17,
+      "base_features": 17,
+      "interaction_features": 0,
+      "cloud_optimized": true,
+      "batch_size": 20,
+      "memory_cleanups": 2,
+      "batches_processed": 1,
+      "processing_time": 2.6325535774230957,
+      "memory_before": 511.60546875,
+      "memory_after": 512.3203125,
+      "memory_peak": 512.3203125
+    }
+  },
+  "memory_peaks": {
+    "memory_manager": 466.30078125,
+    "qdrant_manager": 466.4140625,
+    "classifier": 511.53125,
+    "vision_processor": 511.57421875,
+    "fusion_processor": 511.60546875,
+    "feature_generator": 512.3203125
+  },
+  "cloud_ready": true,
+  "recommendations": [
+    "1 test(s) failed - review error logs",
+    "qdrant_manager component needs optimization - check error details"
+  ]
+}
