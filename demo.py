@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 AI-Powered Insurance Claims Processing Assistant - Interactive Demo
-Cloud-Optimized | Production Ready | Try It Now!
+Cloud-Optimized | Enterprise Scale | Try It Now!
 
 This script provides an interactive way to test the AI claims processing system.
 Perfect for demonstrations, testing, and onboarding new users.
@@ -44,7 +44,7 @@ def print_banner():
 ║                                                                              ║
 ║   🏥🤖 AI-Powered Insurance Claims Processing Assistant                        ║
 ║                                                                              ║
-║   ☁️  Cloud-Optimized | 🚀 Production Ready | 💡 Enterprise Scale          ║
+║   ☁️  Cloud-Optimized | 💡 Enterprise Scale                                  ║
 ║                                                                              ║
 ║   🌟 Try it now: https://github.com/mrizvi96/AIGenesis                        ║
 ║                                                                              ║

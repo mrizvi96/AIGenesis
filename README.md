@@ -1,6 +1,6 @@
 # AI-Powered Insurance Claims Processing Assistant 🏥🤖
 
-**Cloud-Optimized | Production Ready | Enterprise Scale**
+**Cloud-Optimized | Enterprise Scale**
 
 ## 🌟 Quick Start - Try It Now!
 
@@ -35,7 +35,7 @@ docker-compose up -d
 - **📄 Document Analysis**: OCR and feature extraction from medical reports
 - **🎯 Multi-Task Classification**: Automatic damage assessment, fraud detection, and claim routing
 - **💰 Cost Efficient**: 83.3% functionality on cloud free tier
-- **🔄 Production Ready**: Automatic memory management and model optimization
+- **🔄 Cloud Optimized**: Automatic memory management and model optimization
 
 ## 📋 System Requirements
 
@@ -217,7 +217,7 @@ AIGenesis/
 - Pre-configured environment
 - Free 60 hours/month
 
-### 2. Cloud Deployment (Production)
+### 2. Cloud Deployment
 ```bash
 # Deploy to Railway, Render, or similar
 git push https://github.com/mrizvi96/AIGenesis.git

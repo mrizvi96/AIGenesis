@@ -146,13 +146,32 @@ with tab1:
         claim_amount = st.number_input("Claim Amount ($):", min_value=0, value=10000)
         urgency = st.selectbox("Urgency:", ["Low", "Medium", "High", "Critical"])
 
+    # File upload option
+    st.markdown("### 📁 Text File Upload Option")
+    uploaded_text_file = st.file_uploader(
+        "Upload a text file containing claim description:",
+        type=['txt', 'md'],
+        help="Upload a .txt or .md file with your claim description"
+    )
+
     # Text input area
     claim_text = st.text_area(
         "Claim Description:",
         value=st.session_state.get('claim_text', SAMPLE_DATA["medical_text"]["description"]),
         height=150,
-        help="Enter detailed claim description including all relevant circumstances"
+        help="Enter detailed claim description including all relevant circumstances, or upload a file above"
     )
+
+    # Process uploaded file
+    if uploaded_text_file is not None:
+        try:
+            # Read the uploaded file
+            file_content = uploaded_text_file.read().decode('utf-8')
+            st.session_state.claim_text = file_content
+            claim_text = file_content
+            st.success(f"✅ Successfully loaded text from: {uploaded_text_file.name}")
+        except Exception as e:
+            st.error(f"Error reading file: {str(e)}")
 
     col1, col2 = st.columns(2)
 
