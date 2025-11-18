@@ -1,0 +1,34 @@
+# Core dependencies - lightweight versions
+qdrant-client>=1.7.0
+torch>=2.0.0
+sentence-transformers>=2.2.0
+
+# Data processing - essential only
+numpy==1.24.3
+pandas==2.0.3
+scikit-learn==1.3.0
+Pillow==10.0.1
+
+# Audio/Video processing - lightweight alternatives
+soundfile==0.12.1
+imageio==2.31.5
+imageio-ffmpeg==0.4.8
+
+# Backend
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+python-multipart==0.0.6
+aiofiles==23.2.1
+
+# Frontend
+streamlit==1.28.1
+plotly==5.17.0
+matplotlib==3.7.2
+
+# Compatibility
+protobuf==3.20.3
+
+# Additional utilities
+requests==2.31.0
+python-dotenv==1.0.0
+pydantic==2.5.0

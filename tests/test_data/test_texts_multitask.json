@@ -1,0 +1,248 @@
+{
+  "text_samples": [
+    {
+      "text": "标的车与三者车高速公路行驶相撞，两车受损",
+      "claim_context": {
+        "claim_id": "PDF_EXAMPLE_001",
+        "amount": 8000.0,
+        "claim_type": "auto",
+        "accident_time": "16:20",
+        "accident_date": "2023-08-10"
+      },
+      "expected_labels": {
+        "driving_status": "driving",
+        "accident_type": "collision",
+        "road_type": "highway",
+        "cause_accident": "negligence",
+        "vehicle_count": "two",
+        "parties_involved": "car/car"
+      },
+      "expected_f1_scores": {
+        "driving_status": 0.93,
+        "accident_type": 0.84,
+        "road_type": 0.79,
+        "cause_accident": 0.85,
+        "vehicle_count": 0.94,
+        "parties_involved": 0.89
+      }
+    },
+    {
+      "text": "Vehicle collision at intersection during evening rush hour causing moderate damage to both vehicles",
+      "claim_context": {
+        "claim_id": "RUSH_HOUR_001",
+        "amount": 7500.0,
+        "claim_type": "auto",
+        "accident_time": "17:45",
+        "accident_date": "2023-06-15"
+      },
+      "expected_labels": {
+        "driving_status": "driving",
+        "accident_type": "collision",
+        "road_type": "intersection",
+        "cause_accident": "negligence",
+        "vehicle_count": "two",
+        "parties_involved": "car/car"
+      }
+    },
+    {
+      "text": "Single vehicle rollover on highway in clear weather with no other vehicles involved",
+      "claim_context": {
+        "claim_id": "ROLLOVER_001",
+        "amount": 12000.0,
+        "claim_type": "auto",
+        "accident_time": "14:30",
+        "accident_date": "2023-09-20"
+      },
+      "expected_labels": {
+        "driving_status": "driving",
+        "accident_type": "rollover",
+        "road_type": "highway",
+        "cause_accident": "mechanical",
+        "vehicle_count": "single",
+        "parties_involved": "single"
+      }
+    },
+    {
+      "text": "Rear-end collision in parking lot while parked, minimal damage to parked vehicle",
+      "claim_context": {
+        "claim_id": "PARKING_LOT_001",
+        "amount": 3200.0,
+        "claim_type": "auto",
+        "accident_time": "10:15",
+        "accident_date": "2023-04-10"
+      },
+      "expected_labels": {
+        "driving_status": "parked",
+        "accident_type": "rear_end",
+        "road_type": "parking",
+        "cause_accident": "negligence",
+        "vehicle_count": "two",
+        "parties_involved": "car/car"
+      }
+    },
+    {
+      "text": "Multi-vehicle pileup on highway during foggy conditions involving three cars and one truck",
+      "claim_context": {
+        "claim_id": "PILEUP_001",
+        "amount": 25000.0,
+        "claim_type": "auto",
+        "accident_time": "07:30",
+        "accident_date": "2023-11-15"
+      },
+      "expected_labels": {
+        "driving_status": "driving",
+        "accident_type": "multi_vehicle",
+        "road_type": "highway",
+        "cause_accident": "weather",
+        "vehicle_count": "multiple",
+        "parties_involved": "multiple"
+      }
+    },
+    {
+      "text": "Side impact collision at residential intersection involving two cars and one pedestrian",
+      "claim_context": {
+        "claim_id": "SIDE_IMPACT_001",
+        "amount": 8500.0,
+        "claim_type": "auto",
+        "accident_time": "15:20",
+        "accident_date": "2023-07-25"
+      },
+      "expected_labels": {
+        "driving_status": "driving",
+        "accident_type": "side_impact",
+        "road_type": "intersection",
+        "cause_accident": "negligence",
+        "vehicle_count": "two",
+        "parties_involved": "pedestrian"
+      }
+    },
+    {
+      "text": "Head-on collision on rural road with single vehicle crossing center line",
+      "claim_context": {
+        "claim_id": "HEAD_ON_001",
+        "amount": 15000.0,
+        "claim_type": "auto",
+        "accident_time": "22:45",
+        "accident_date": "2023-10-05"
+      },
+      "expected_labels": {
+        "driving_status": "driving",
+        "accident_type": "head_on",
+        "road_type": "rural",
+        "cause_accident": "impaired",
+        "vehicle_count": "two",
+        "parties_involved": "car/car"
+      }
+    },
+    {
+      "text": "Collision with animal on highway during night causing vehicle to swerve into guardrail",
+      "claim_context": {
+        "claim_id": "ANIMAL_COLLISION_001",
+        "amount": 5500.0,
+        "claim_type": "auto",
+        "accident_time": "23:30",
+        "accident_date": "2023-08-20"
+      },
+      "expected_labels": {
+        "driving_status": "driving",
+        "accident_type": "animal",
+        "road_type": "highway",
+        "cause_accident": "road_condition",
+        "vehicle_count": "single",
+        "parties_involved": "single"
+      }
+    },
+    {
+      "text": "Low-speed collision in commercial area with two vehicles stopped at traffic light",
+      "claim_context": {
+        "claim_id": "LOW_SPEED_001",
+        "amount": 2800.0,
+        "claim_type": "auto",
+        "accident_time": "08:45",
+        "accident_date": "2023-05-15"
+      },
+      "expected_labels": {
+        "driving_status": "stopped",
+        "accident_type": "collision",
+        "road_type": "commercial",
+        "cause_accident": "negligence",
+        "vehicle_count": "two",
+        "parties_involved": "car/car"
+      }
+    },
+    {
+      "text": "Industrial area accident involving vehicle hitting stationary object in warehouse complex",
+      "claim_context": {
+        "claim_id": "INDUSTRIAL_001",
+        "amount": 4200.0,
+        "claim_type": "auto",
+        "accident_time": "13:15",
+        "accident_date": "2023-06-30"
+      },
+      "expected_labels": {
+        "driving_status": "driving",
+        "accident_type": "object",
+        "road_type": "industrial",
+        "cause_accident": "negligence",
+        "vehicle_count": "single",
+        "parties_involved": "property_only"
+      }
+    }
+  ],
+  "fraud_indicator_examples": [
+    {
+      "text": "Accident happened late at night after hours with no witnesses available",
+      "expected_fraud_indicators": ["suspicious_timing", "no_witnesses"],
+      "expected_risk_level": "medium"
+    },
+    {
+      "text": "Something happened to my car, not sure what, just need quick payment",
+      "expected_fraud_indicators": ["vague_description", "hasty_settlement"],
+      "expected_risk_level": "high"
+    },
+    {
+      "text": "Vehicle completely destroyed, total loss, need immediate settlement now",
+      "expected_fraud_indicators": ["excessive_damage", "hasty_settlement", "emotional_language"],
+      "expected_risk_level": "medium"
+    },
+    {
+      "text": "Minor scratch on bumper, but claiming severe internal damage and emotional distress",
+      "expected_fraud_indicators": ["inconsistent_damage", "exaggerated_claims"],
+      "expected_risk_level": "high"
+    },
+    {
+      "text": "Multiple previous claims for similar incidents within last 6 months",
+      "expected_fraud_indicators": ["claim_frequency", "pattern_behavior"],
+      "expected_risk_level": "high"
+    }
+  ],
+  "multilingual_examples": [
+    {
+      "text": "Accidente de vehículo con daños moderados en intersección urbana",
+      "language": "spanish",
+      "expected_task": {
+        "driving_status": "driving",
+        "accident_type": "collision",
+        "road_type": "intersection"
+      }
+    },
+    {
+      "text": "两车在高速公路上相撞，造成严重损坏",
+      "language": "chinese",
+      "expected_task": {
+        "driving_status": "driving",
+        "accident_type": "collision",
+        "road_type": "highway"
+      }
+    },
+    {
+      "text": "Vehicle collision with damage 事故需要大量维修",
+      "language": "mixed",
+      "expected_task": {
+        "driving_status": "driving",
+        "accident_type": "collision",
+        "road_type": "unknown"
+      }
+    }
+  ]
+}

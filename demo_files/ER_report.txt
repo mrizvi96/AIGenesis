@@ -1,0 +1,60 @@
+EMERGENCY ROOM MEDICAL REPORT
+==============================
+
+Patient: John Smith
+Age: 45
+Date: 2024-11-15
+Time: 2:30 AM
+Medical Record: ER-2024-11543
+
+CHIEF COMPLAINT:
+Patient presents with severe chest pain and shortness of breath.
+
+HISTORY OF PRESENT ILLNESS:
+Patient was at home watching television when suddenly experienced severe, crushing chest pain radiating to left arm. Symptoms began approximately 45 minutes prior to arrival. Patient reports associated shortness of breath, diaphoresis, and nausea. No previous similar episodes.
+
+PHYSICAL EXAMINATION:
+- Vital Signs: BP 145/90, HR 110, RR 24, Temp 98.6°F, O2 Sat 94% on room air
+- Cardiovascular: Irregularly irregular rhythm, tachycardic
+- Respiratory: Decreased breath sounds at bases bilaterally
+- Neurologic: Alert and oriented x3, no focal deficits
+
+EMERGENCY PROCEDURES PERFORMED:
+1. Immediate ECG performed at 2:35 AM
+2. IV access established (2 large-bore IVs)
+3. Cardiac enzymes drawn
+4. Chest X-ray completed
+5. Nitroglycerin administered sublingually
+6. Aspirin 324mg administered
+
+DIAGNOSTIC RESULTS:
+- ECG: Shows ST-segment elevation in leads II, III, aVF
+- Cardiac Enzymes: Troponin I 2.3 ng/mL (elevated)
+- Chest X-ray: No acute cardiopulmonary abnormality
+
+WORKING DIAGNOSIS:
+Acute Inferior Wall Myocardial Infarction (STEMI)
+
+EMERGENCY TREATMENT:
+- Thrombolytic therapy initiated
+- Heparin infusion started
+- Beta-blocker administered
+- Cardiology consultation obtained
+- Patient prepared for cardiac catheterization
+
+DISPOSITION:
+Patient admitted to Cardiac Care Unit for further management and potential cardiac catheterization.
+
+PHYSICIAN SIGNATURE:
+Dr. Sarah Johnson, MD
+Emergency Medicine Physician
+License: CA 987654
+
+ATTENDING PHYSICIAN:
+Dr. Michael Chen, MD
+Cardiology
+License: CA 876543
+
+SEVERITY ASSESSMENT: CRITICAL
+URGENCY LEVEL: IMMEDIATE
+ESTIMATED LENGTH OF STAY: 3-5 days

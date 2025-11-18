@@ -1,0 +1,76 @@
+### VS Code REST Client Demo for AI Insurance Claims Processing
+### To use: Install "REST Client" extension in VS Code, then click "Send Request" below
+
+@baseUrl = http://127.0.0.1:8000
+
+### 1. Health Check
+GET {{baseUrl}}/health
+
+### 2. Submit Medical Claim (Demo)
+POST {{baseUrl}}/submit_claim
+Content-Type: application/json
+
+{
+  "text": "Patient presents with severe chest pain and shortness of breath. ECG shows abnormal rhythm. Doctor recommends immediate cardiac evaluation.",
+  "claim_type": "medical",
+  "priority": "high"
+}
+
+### 3. Submit Suspicious Auto Claim (Fraud Detection Demo)
+POST {{baseUrl}}/submit_claim
+Content-Type: application/json
+
+{
+  "text": "Customer claims minor slip and fall but demands $47,935 in damages. Details are vague and inconsistent. No witnesses reported.",
+  "claim_type": "auto",
+  "priority": "medium"
+}
+
+### 4. Get AI Recommendation for Medical Claim
+POST {{baseUrl}}/get_recommendation
+Content-Type: application/json
+
+{
+  "claim_id": "demo_medical_001",
+  "text": "Patient presents with severe chest pain and shortness of breath. ECG shows abnormal rhythm. Doctor recommends immediate cardiac evaluation.",
+  "claim_type": "medical",
+  "amount": 15234.67
+}
+
+### 5. Search Similar Claims
+POST {{baseUrl}}/search_claims
+Content-Type: application/json
+
+{
+  "query": "chest pain emergency room heart attack",
+  "claim_type": "medical",
+  "limit": 5
+}
+
+### 6. Process a File Upload (if you have files)
+POST {{baseUrl}}/process_file
+Content-Type: multipart/form-data; boundary=boundary
+
+--boundary
+Content-Disposition: form-data; name="file"; filename="ER_report.txt"
+Content-Type: text/plain
+
+EMERGENCY ROOM MEDICAL REPORT
+==============================
+
+Patient: John Smith
+Age: 45
+Date: 2024-11-15
+Time: 2:30 AM
+
+CHIEF COMPLAINT:
+Patient presents with severe chest pain and shortness of breath.
+
+DIAGNOSIS:
+Acute Inferior Wall Myocardial Infarction (STEMI)
+
+TREATMENT:
+Thrombolytic therapy initiated
+Patient admitted to Cardiac Care Unit
+
+--boundary--

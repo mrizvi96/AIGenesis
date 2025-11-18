@@ -1,0 +1,60 @@
+REPORTE MÉDICO DE URGENCIA
+============================
+
+Paciente: Maria Rodriguez
+Edad: 38 años
+Fecha: 2024-11-16
+Hora: 10:45 AM
+Historia Clínica: HU-2024-33421
+
+MOTIVO DE CONSULTA:
+Paciente presenta dolor severo en el pecho y dificultad para respirar.
+
+HISTORIA DE LA ENFERMEDAD ACTUAL:
+Paciente estaba trabajando en su oficina cuando comenzó a experimentar dolor agudo en el pecho que se irradia hacia el brazo izquierdo. Los síntomas comenzaron aproximadamente 30 minutos antes de llegar al hospital. La paciente reporta falta de aire asociada, sudoración y mareo. No ha tenido episodios similares anteriormente.
+
+EXAMEN FÍSICO:
+- Signos Vitales: TA 140/85, FC 105, FR 22, Temp 37.1°C, Sat O2 93% en aire ambiente
+- Cardiovascular: Ritmo irregular, taquicárdico
+- Respiratorio: Disminución de sonidos respiratorios en bases bilaterales
+- Neurológico: Alerta y orientada, sin déficits focales
+
+PROCEDIMIENTOS DE EMERGENCIA REALIZADOS:
+1. ECG inmediato a las 10:50 AM
+2. Acceso IV establecido (2 catéteres de gran calibre)
+3. Enzimas cardíacas tomadas
+4. Radiografía de tórax completada
+5. Nitroglicerina administrada sublingualmente
+6. Aspirina 324mg administrada
+
+RESULTADOS DIAGNÓSTICOS:
+- ECG: Muestra elevación del segmento ST en derivaciones V2-V4
+- Enzimas Cardíacas: Troponina I 1.8 ng/mL (elevada)
+- Radiografía de Tórax: Sin anormalidad cardiopulmonar aguda
+
+DIAGNÓSTICO DE TRABAJO:
+Infarto Agudo de Miocardio de Pared Anterior (STEMI)
+
+TRATAMIENTO DE EMERGENCIA:
+- Terapia trombolítica iniciada
+- Infusión de heparina iniciada
+- Betabloqueador administrado
+- Consulta de cardiología obtenida
+- Paciente preparada para cateterismo cardíaco
+
+DISPOSICIÓN:
+Paciente admitida a la Unidad de Cuidados Intensivos Cardíacos para manejo posterior y posible cateterismo cardíaco.
+
+FIRMA DEL MÉDICO:
+Dr. Carlos Martinez, MD
+Médico de Emergencias
+Licencia: CA 654321
+
+MÉDICO ASISTENTE:
+Dr. Ana Garcia, MD
+Cardiología
+Licencia: CA 543210
+
+EVALUACIÓN DE GRAVEDAD: CRÍTICA
+NIVEL DE URGENCIA: INMEDIATA
+ESTANCIA ESTIMADA: 4-6 días
