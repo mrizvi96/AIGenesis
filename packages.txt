@@ -1,0 +1,9 @@
+streamlit==1.28.1
+qdrant-client>=1.8.0
+sentence-transformers>=2.3.0
+torch>=2.1.0
+numpy>=1.24.0
+pandas>=2.1.0
+scikit-learn>=1.3.0
+python-dotenv>=1.0.0
+psutil>=5.9.0
