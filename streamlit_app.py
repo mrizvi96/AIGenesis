@@ -78,7 +78,7 @@ st.sidebar.markdown("## 🚀 System Status")
 st.sidebar.success("✅ Streamlit App Active")
 st.sidebar.info("📁 Qdrant Cloud: Connected")
 st.sidebar.info("🧠 AI Engine: Ready")
-st.sidebar.info("🔍 Multimodal Processing: Enabled")
+st.sidebar.info("🔍 Multimodal Processing: In progress")
 
 # Initialize session state for Qdrant collection
 if 'qdrant_collection' not in st.session_state:
@@ -533,16 +533,7 @@ with tab5:
     8. **📈 Recommendation Engine**: Suggests similar claims and relevant information
     """)
 
-# Footer with comprehensive information
-st.markdown("---")
-st.markdown("""
-<div class="success-box">
-    <strong>🎉 Comprehensive Multi-Modal Demo Complete!</strong><br>
-    This demonstration showcases AI-powered insurance claims processing using Qdrant vector search
-    across text, images, audio, and video data - transforming inefficient, biased processes into
-    fast, fair, intelligent systems that benefit both industry and society.
-</div>
-""", unsafe_allow_html=True)
+# Footer
 
 # System metrics
 st.markdown("### 📊 System Performance Metrics")
