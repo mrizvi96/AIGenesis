@@ -3,7 +3,7 @@
 ## 📋 Quick Access Links
 
 ### **Live Application URL**
-🔗 **Primary Demo**: https://share.streamlit.io/mrizvi96/AIGenesis/main/app.py
+🔗 **Primary Demo**: https://share.streamlit.io/mrizvi96/AIGenesis/main/streamlit_app.py
 
 ### **Alternative Access**
 1. **GitHub Repository**: https://github.com/mrizvi96/AIGenesis
