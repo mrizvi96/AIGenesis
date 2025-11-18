@@ -1,297 +1,498 @@
+#!/usr/bin/env python3
 """
-AI Insurance Claims Processing System Demo
-Complete system demonstration and status check
+AI-Powered Insurance Claims Processing Assistant - Interactive Demo
+Cloud-Optimized | Production Ready | Try It Now!
+
+This script provides an interactive way to test the AI claims processing system.
+Perfect for demonstrations, testing, and onboarding new users.
+
+Usage:
+    python demo.py                    # Interactive demo mode
+    python demo.py --auto             # Automatic demo with sample data
+    python demo.py --test             # Run integration tests
+    python demo.py --install          # Quick installation check
 """
 
-import sys
 import os
+import sys
 import json
 import time
-import requests
-from datetime import datetime
+import argparse
+from typing import Dict, Any, List
+from pathlib import Path
 
 # Add backend to path
-sys.path.append('backend')
+sys.path.append(str(Path(__file__).parent / "backend"))
 
-def check_system_status():
-    """Check overall system status"""
-    print("=== AI INSURANCE CLAIMS PROCESSING SYSTEM STATUS ===\n")
+# Color codes for beautiful output
+class Colors:
+    HEADER = '\033[95m'
+    OKBLUE = '\033[94m'
+    OKCYAN = '\033[96m'
+    OKGREEN = '\033[92m'
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    ENDC = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
+
+def print_banner():
+    """Print beautiful demo banner"""
+    print(f"""
+{Colors.HEADER}{Colors.BOLD}
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                                                                              ║
+║   🏥🤖 AI-Powered Insurance Claims Processing Assistant                        ║
+║                                                                              ║
+║   ☁️  Cloud-Optimized | 🚀 Production Ready | 💡 Enterprise Scale          ║
+║                                                                              ║
+║   🌟 Try it now: https://github.com/mrizvi96/AIGenesis                        ║
+║                                                                              ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+{Colors.ENDC}
+""")
+
+def print_section(title: str, color: str = Colors.OKBLUE):
+    """Print a section header"""
+    print(f"\n{color}{Colors.BOLD}{'='*60}{Colors.ENDC}")
+    print(f"{color}{Colors.BOLD}  {title}{Colors.ENDC}")
+    print(f"{color}{Colors.BOLD}{'='*60}{Colors.ENDC}")
+
+def print_success(message: str):
+    """Print success message"""
+    print(f"{Colors.OKGREEN}✅ {message}{Colors.ENDC}")
+
+def print_warning(message: str):
+    """Print warning message"""
+    print(f"{Colors.WARNING}⚠️  {message}{Colors.ENDC}")
+
+def print_error(message: str):
+    """Print error message"""
+    print(f"{Colors.FAIL}❌ {message}{Colors.ENDC}")
+
+def print_info(message: str):
+    """Print info message"""
+    print(f"{Colors.OKCYAN}ℹ️  {message}{Colors.ENDC}")
+
+def check_installation() -> bool:
+    """Check if system is properly installed"""
+    print_section("🔍 Installation Check")
 
     try:
-        # Test imports
-        print("[INFO] Testing Python imports...")
-        from qdrant_manager import QdrantManager
-        from embeddings import MultimodalEmbedder
-        from recommender import ClaimsRecommender
-        print("[OK] All Python modules imported successfully")
-
-        # Test Qdrant connection
-        print("\n[INFO] Testing Qdrant Cloud connection...")
-        qdrant = QdrantManager()
-        if qdrant.test_connection():
-            print("[OK] Qdrant Cloud connection successful")
-        else:
-            print("[ERROR] Qdrant Cloud connection failed")
+        # Check Python version
+        python_version = sys.version_info
+        if python_version.major < 3 or python_version.minor < 8:
+            print_error(f"Python {python_version.major}.{python_version.minor} detected. Python 3.8+ required.")
             return False
+        print_success(f"Python {python_version.major}.{python_version.minor}.{python_version.micro} ✓")
 
-        # Test embedding system
-        print("\n[INFO] Testing embedding system...")
-        embedder = MultimodalEmbedder()
-        test_embedding = embedder.embed_text("Test claim about car accident")
-        print(f"[OK] Text embedding generated (dimension: {len(test_embedding)})")
-
-        # Test recommendation engine
-        print("\n[INFO] Testing recommendation engine...")
-        recommender = ClaimsRecommender(qdrant, embedder)
-        print("[OK] Recommendation engine initialized")
-
-        # Check collections
-        print("\n[INFO] Checking Qdrant collections...")
-        collections = qdrant.get_collection_info()
-        for name, info in collections.items():
-            if "error" not in info:
-                print(f"[OK] Collection '{name}': Ready")
-            else:
-                print(f"[WARNING] Collection '{name}': {info['error']}")
-
-        print(f"\n[OK] System status: HEALTHY")
-        return True
-
-    except Exception as e:
-        print(f"[ERROR] System check failed: {e}")
-        return False
-
-def demo_claim_submission():
-    """Demonstrate claim submission"""
-    print("\n=== DEMO: CLAIM SUBMISSION ===\n")
-
-    try:
-        # Test claim data
-        test_claim = {
-            "claim_id": "DEMO_001",
-            "customer_id": "CUST_DEMO_001",
-            "policy_number": "POL_DEMO_001",
-            "claim_type": "auto",
-            "description": "Minor rear-end collision at traffic light. Bumper damage, no injuries.",
-            "amount": 3500.00,
-            "location": "Demo City, USA"
-        }
-
-        print(f"Submitting claim: {test_claim['description']}")
-        print(f"Amount: ${test_claim['amount']:,.2f}")
-
-        # Import modules
-        from qdrant_manager import QdrantManager
-        from embeddings import MultimodalEmbedder
-        from recommender import ClaimsRecommender
-
-        # Initialize components
-        qdrant = QdrantManager()
-        embedder = MultimodalEmbedder()
-        recommender = ClaimsRecommender(qdrant, embedder)
-
-        # Process claim
-        text_embedding = embedder.embed_text(test_claim['description'])
-        point_id = qdrant.add_claim(test_claim, text_embedding, 'text_claims')
-        recommendation = recommender.recommend_outcome(test_claim, text_embedding)
-
-        print(f"[OK] Claim submitted with ID: {point_id}")
-        print(f"[OK] Recommendation: {recommendation['recommendation']['action']}")
-        print(f"[OK] Fraud Risk: {recommendation['fraud_risk']['risk_level']} ({recommendation['fraud_risk']['risk_score']:.1%})")
-        print(f"[OK] Settlement Estimate: ${recommendation['settlement_estimate']['estimated_amount']:,.2f}")
-        print(f"[OK] Similar Claims Found: {recommendation['similar_claims_count']}")
-
-        return True
-
-    except Exception as e:
-        print(f"[ERROR] Demo claim submission failed: {e}")
-        return False
-
-def demo_search_functionality():
-    """Demonstrate search functionality"""
-    print("\n=== DEMO: SEARCH FUNCTIONALITY ===\n")
-
-    try:
-        from qdrant_manager import QdrantManager
-        from embeddings import MultimodalEmbedder
-
-        qdrant = QdrantManager()
-        embedder = MultimodalEmbedder()
-
-        # Test searches
-        test_queries = [
-            "car accident",
-            "water damage",
-            "theft",
-            "medical emergency",
-            "suspicious claim"
+        # Check required files
+        required_files = [
+            "backend/aiml_multi_task_classifier.py",
+            "backend/qdrant_manager.py",
+            "backend/memory_manager.py",
+            "requirements.txt",
+            ".env.example"
         ]
 
-        for query in test_queries:
-            print(f"Searching for: '{query}'")
-            embedding = embedder.embed_text(query)
-            results = qdrant.search_similar_claims(embedding, 'text_claims', limit=3)
-            print(f"Found {len(results)} similar claims")
-            for i, result in enumerate(results):
-                print(f"  {i+1}. {result.get('description', 'N/A')[:80]}... (Score: {result.get('similarity_score', 0):.1%})")
-            print()
+        for file in required_files:
+            if not os.path.exists(file):
+                print_error(f"Missing file: {file}")
+                return False
+            print_success(f"Found: {file}")
+
+        # Check environment variables
+        if not os.path.exists(".env"):
+            print_warning("No .env file found. Creating from template...")
+            try:
+                import shutil
+                shutil.copy(".env.example", ".env")
+                print_success("Created .env from template")
+                print_warning("Please edit .env with your Qdrant Cloud credentials")
+            except Exception as e:
+                print_error(f"Could not create .env file: {e}")
+                return False
+        else:
+            print_success("Environment file (.env) found")
+
+        # Try to import core modules
+        try:
+            os.environ.setdefault('PYTHONPATH', str(Path(__file__).parent))
+            import dotenv
+            dotenv.load_dotenv()
+            print_success("Environment loaded successfully")
+        except ImportError:
+            print_warning("python-dotenv not installed. Install with: pip install python-dotenv")
+        except Exception as e:
+            print_warning(f"Environment loading issue: {e}")
 
         return True
 
     except Exception as e:
-        print(f"[ERROR] Search demo failed: {e}")
+        print_error(f"Installation check failed: {e}")
         return False
 
-def check_api_server():
-    """Check if API server is running"""
-    print("\n=== API SERVER STATUS ===\n")
+def quick_health_check() -> Dict[str, Any]:
+    """Quick system health check"""
+    print_section("🏥 System Health Check")
+
+    results = {
+        'overall_status': 'unknown',
+        'checks': {}
+    }
 
     try:
-        response = requests.get("http://localhost:8000/health", timeout=5)
-        if response.status_code == 200:
-            data = response.json()
-            print("[OK] API server is running on localhost:8000")
-            print(f"    Status: {data.get('status', 'unknown')}")
-            print(f"    Qdrant Connected: {data.get('services', {}).get('qdrant_connected', False)}")
-            print(f"    Embedder Ready: {data.get('services', {}).get('embedder_loaded', False)}")
-            return True
+        # Check memory
+        try:
+            import psutil
+            memory = psutil.virtual_memory()
+            memory_gb = memory.total / (1024**3)
+            available_gb = memory.available / (1024**3)
+
+            results['checks']['memory'] = {
+                'status': 'ok' if memory_gb >= 2 else 'warning',
+                'total_gb': round(memory_gb, 2),
+                'available_gb': round(available_gb, 2),
+                'percent_used': memory.percent
+            }
+
+            if memory_gb >= 2:
+                print_success(f"Memory: {round(memory_gb, 1)}GB total, {round(available_gb, 1)}GB available")
+            else:
+                print_warning(f"Memory: {round(memory_gb, 1)}GB total (recommended: 2GB+)")
+        except ImportError:
+            print_warning("psutil not available for memory checking")
+            results['checks']['memory'] = {'status': 'unknown'}
+
+        # Check disk space
+        try:
+            disk = psutil.disk_usage('.')
+            disk_gb = disk.total / (1024**3)
+            free_gb = disk.free / (1024**3)
+
+            results['checks']['disk'] = {
+                'status': 'ok' if free_gb >= 1 else 'warning',
+                'total_gb': round(disk_gb, 2),
+                'free_gb': round(free_gb, 2)
+            }
+
+            if free_gb >= 1:
+                print_success(f"Disk: {round(free_gb, 1)}GB free")
+            else:
+                print_warning(f"Disk: {round(free_gb, 1)}GB free (recommended: 1GB+)")
+        except:
+            print_warning("Could not check disk space")
+            results['checks']['disk'] = {'status': 'unknown'}
+
+        # Check environment variables
+        qdrant_url = os.getenv('QDRANT_URL')
+        qdrant_key = os.getenv('QDRANT_API_KEY')
+
+        if qdrant_url and qdrant_key:
+            print_success("Qdrant Cloud credentials configured")
+            results['checks']['qdrant_config'] = {'status': 'ok'}
         else:
-            print(f"[ERROR] API server returned status {response.status_code}")
-            return False
-    except requests.exceptions.ConnectionError:
-        print("[WARNING] API server not running on localhost:8000")
-        print("To start the API server, run:")
-        print("  cd backend && python main.py")
-        return False
+            print_warning("Qdrant Cloud credentials not configured")
+            results['checks']['qdrant_config'] = {'status': 'warning'}
+
+        # Calculate overall status
+        statuses = [check.get('status', 'unknown') for check in results['checks'].values()]
+        if all(status == 'ok' for status in statuses):
+            results['overall_status'] = 'excellent'
+        elif all(status in ['ok', 'warning'] for status in statuses):
+            results['overall_status'] = 'good'
+        else:
+            results['overall_status'] = 'needs_attention'
+
+        return results
+
     except Exception as e:
-        print(f"[ERROR] Failed to check API server: {e}")
-        return False
+        print_error(f"Health check failed: {e}")
+        results['overall_status'] = 'error'
+        return results
 
-def generate_launch_script():
-    """Generate launch script for easy demo"""
-    script_content = """#!/bin/bash
-# AI Insurance Claims Processing System Launch Script
+def run_sample_claim_processing() -> Dict[str, Any]:
+    """Run sample claim processing demo"""
+    print_section("🏥 Sample Claim Processing")
 
-echo "Starting AI Insurance Claims Processing System..."
+    # Sample claim data
+    sample_claims = [
+        {
+            "id": "demo_001",
+            "type": "Medical Emergency",
+            "text": "Patient presents with severe chest pain radiating to left arm. Symptoms began approximately 45 minutes prior to arrival. Patient reports associated shortness of breath, diaphoresis, and nausea. ECG shows ST-segment elevation in leads II, III, aVF.",
+            "amount": 15000,
+            "priority": "High"
+        },
+        {
+            "id": "demo_002",
+            "type": "Vehicle Accident",
+            "text": "Vehicle collision resulting in moderate front-end damage. Driver reports whiplash symptoms and minor cuts. Airbags deployed. Vehicle towed from scene. Police report filed.",
+            "amount": 8500,
+            "priority": "Medium"
+        },
+        {
+            "id": "demo_003",
+            "type": "Property Damage",
+            "text": "Water damage to residential property due to burst pipe. Living room and kitchen affected. Drywall replacement needed. Estimated repair time: 2 weeks.",
+            "amount": 12000,
+            "priority": "Medium"
+        }
+    ]
 
-# Start backend server
-echo "Starting FastAPI backend server..."
-cd backend
-python main.py &
-BACKEND_PID=$!
+    try:
+        # Import the classifier
+        print_info("Loading AI claim classifier...")
+        from aiml_multi_task_classifier import get_aiml_multitask_classifier
 
-echo "Backend server started with PID: $BACKEND_PID"
-echo "API available at: http://localhost:8000"
+        classifier = get_aiml_multitask_classifier()
+        print_success("AI classifier loaded successfully")
 
-# Wait for backend to start
-sleep 10
+        results = []
 
-# Start frontend
-echo "Starting Streamlit frontend..."
-cd ../frontend
-streamlit run ui.py &
-FRONTEND_PID=$!
+        for i, claim in enumerate(sample_claims, 1):
+            print(f"\n{Colors.OKCYAN}Processing Claim {i}/{len(sample_claims)}: {claim['type']}{Colors.ENDC}")
+            print(f"Amount: ${claim['amount']:,}")
+            print(f"Priority: {claim['priority']}")
+            print(f"Description: {claim['text'][:100]}...")
 
-echo "Frontend started with PID: $FRONTEND_PID"
-echo "Frontend available at: http://localhost:8501"
+            try:
+                start_time = time.time()
 
-echo ""
-echo "=== SYSTEM READY ==="
-echo "Backend API: http://localhost:8000"
-echo "Frontend UI: http://localhost:8501"
-echo "API Docs: http://localhost:8000/docs"
-echo ""
-echo "To stop the system:"
-echo "kill $BACKEND_PID $FRONTEND_PID"
-"""
+                # Process the claim
+                result = classifier.classify_claim({
+                    "claim_text": claim['text'],
+                    "claim_type": claim['type'].lower(),
+                    "amount": claim['amount']
+                })
 
-    with open('start_system.sh', 'w') as f:
-        f.write(script_content)
+                processing_time = time.time() - start_time
 
-    # For Windows
-    batch_content = """@echo off
-echo Starting AI Insurance Claims Processing System...
+                # Display results
+                print(f"{Colors.OKGREEN}✅ Processing completed in {processing_time:.2f}s{Colors.ENDC}")
 
-echo Starting FastAPI backend server...
-cd backend
-start /B python main.py
+                if 'damage_assessment' in result:
+                    print(f"  🎯 Damage Assessment: {result['damage_assessment']}")
+                if 'fraud_probability' in result:
+                    fraud_prob = result['fraud_probability']
+                    risk_level = 'Low' if fraud_prob < 0.3 else 'Medium' if fraud_prob < 0.7 else 'High'
+                    print(f"  🔍 Fraud Risk: {risk_level} ({fraud_prob:.2%})")
+                if 'recommended_action' in result:
+                    print(f"  📋 Recommended Action: {result['recommended_action']}")
+                if 'urgency_level' in result:
+                    print(f"  ⚡ Urgency: {result['urgency_level']}")
 
-echo Waiting for backend to start...
-timeout /t 10 /nobreak
+                results.append({
+                    'claim_id': claim['id'],
+                    'success': True,
+                    'processing_time': processing_time,
+                    'result': result
+                })
 
-echo Starting Streamlit frontend...
-cd ..\\frontend
-start /B streamlit run ui.py
+            except Exception as e:
+                print_error(f"Failed to process claim {claim['id']}: {e}")
+                results.append({
+                    'claim_id': claim['id'],
+                    'success': False,
+                    'error': str(e)
+                })
 
-echo.
-echo === SYSTEM READY ===
-echo Backend API: http://localhost:8000
-echo Frontend UI: http://localhost:8501
-echo API Docs: http://localhost:8000/docs
-echo.
-echo Press any key to continue...
-pause
-"""
+        # Summary
+        successful = sum(1 for r in results if r['success'])
+        avg_time = sum(r['processing_time'] for r in results if r['success']) / max(successful, 1)
 
-    with open('start_system.bat', 'w') as f:
-        f.write(batch_content)
+        print(f"\n{Colors.OKGREEN}{Colors.BOLD}📊 Processing Summary:{Colors.ENDC}")
+        print(f"  ✅ Successful: {successful}/{len(results)} claims")
+        print(f"  ⏱️  Average Time: {avg_time:.2f}s per claim")
+        print(f"  🚀 Throughput: {60/avg_time:.1f} claims per hour")
 
-    print("[OK] Launch scripts created:")
-    print("  - start_system.sh (Linux/Mac)")
-    print("  - start_system.bat (Windows)")
+        return {
+            'total_claims': len(sample_claims),
+            'successful': successful,
+            'avg_processing_time': avg_time,
+            'results': results
+        }
+
+    except ImportError as e:
+        print_error(f"Could not import classifier: {e}")
+        print_warning("Make sure dependencies are installed: pip install -r requirements.txt")
+        return {'error': 'import_error', 'message': str(e)}
+    except Exception as e:
+        print_error(f"Claim processing failed: {e}")
+        return {'error': 'processing_error', 'message': str(e)}
+
+def run_integration_tests():
+    """Run cloud integration tests"""
+    print_section("🧪 Cloud Integration Tests")
+
+    try:
+        print_info("Running cloud integration tests...")
+        from cloud_integration_test import CloudIntegrationTester
+
+        tester = CloudIntegrationTester()
+        results = tester.run_comprehensive_tests()
+
+        print(f"\n{Colors.BOLD}{Colors.OKGREEN}🏆 Test Results Summary:{Colors.ENDC}")
+        print(f"  🎯 Overall Success: {results.get('success_rate', 0):.1f}%")
+        print(f"  ☁️  Cloud Ready: {'YES' if results.get('cloud_ready') else 'NO'}")
+        print(f"  📊 Components Tested: {len(results.get('component_results', {}))}")
+
+        if results.get('component_results'):
+            print(f"\n{Colors.OKCYAN}Component Breakdown:{Colors.ENDC}")
+            for component, result in results['component_results'].items():
+                status = "✅" if result.get('success') else "❌"
+                print(f"  {status} {component.replace('_', ' ').title()}")
+
+        return results
+
+    except ImportError as e:
+        print_error(f"Could not import test module: {e}")
+        return {'error': 'import_error'}
+    except Exception as e:
+        print_error(f"Integration tests failed: {e}")
+        return {'error': 'test_error'}
+
+def show_setup_guide():
+    """Show setup guide"""
+    print_section("🚀 Quick Setup Guide")
+
+    guide = """
+    📋 STEP-BY-STEP SETUP:
+
+    1️⃣  INSTALL DEPENDENCIES:
+        pip install -r requirements.txt
+
+    2️⃣  SETUP QDRANT CLOUD (FREE):
+        • Visit: https://cloud.qdrant.io/
+        • Create free account
+        • Create cluster (Free tier: 1GB RAM, 4GB storage)
+        • Copy URL and API key
+
+    3️⃣  CONFIGURE ENVIRONMENT:
+        cp .env.example .env
+        # Edit .env with your Qdrant credentials:
+        QDRANT_URL=https://your-cluster.cloud.qdrant.io
+        QDRANT_API_KEY=your-api-key
+
+    4️⃣  RUN THE SYSTEM:
+        python backend/main.py
+        # Or run this demo: python demo.py
+
+    5️⃣  TEST EVERYTHING:
+        python backend/cloud_integration_test.py
+
+    🎯 NEED HELP?
+        • GitHub: https://github.com/mrizvi96/AIGenesis/issues
+        • Email: mohammad.rizvi@csuglobal.edu
+        • README: See README.md for detailed documentation
+    """
+
+    print(guide)
+
+def interactive_menu():
+    """Interactive demo menu"""
+    while True:
+        print_section("🎮 Interactive Demo Menu")
+
+        options = [
+            "1️⃣  Run System Health Check",
+            "2️⃣  Process Sample Claims",
+            "3️⃣  Run Cloud Integration Tests",
+            "4️⃣  View Setup Guide",
+            "0️⃣  Exit Demo"
+        ]
+
+        for option in options:
+            print(f"  {option}")
+
+        try:
+            choice = input(f"\n{Colors.OKCYAN}Select an option (0-4): {Colors.ENDC}").strip()
+
+            if choice == '0':
+                print_success("Thank you for trying AI Claims Processing Assistant!")
+                break
+            elif choice == '1':
+                quick_health_check()
+            elif choice == '2':
+                run_sample_claim_processing()
+            elif choice == '3':
+                run_integration_tests()
+            elif choice == '4':
+                show_setup_guide()
+            else:
+                print_warning("Invalid option. Please select 0-4.")
+
+            input(f"\n{Colors.OKCYAN}Press Enter to continue...{Colors.ENDC}")
+
+        except KeyboardInterrupt:
+            print_success("\nDemo interrupted. Goodbye!")
+            break
+        except Exception as e:
+            print_error(f"Menu error: {e}")
 
 def main():
     """Main demo function"""
-    print("AI INSURANCE CLAIMS PROCESSING SYSTEM DEMO")
-    print("=" * 50)
-    print(f"Timestamp: {datetime.now().isoformat()}")
-    print()
+    parser = argparse.ArgumentParser(description="AI Claims Processing Assistant Demo")
+    parser.add_argument("--auto", action="store_true", help="Run automatic demo")
+    parser.add_argument("--test", action="store_true", help="Run integration tests only")
+    parser.add_argument("--install", action="store_true", help="Check installation only")
+    parser.add_argument("--health", action="store_true", help="Run health check only")
 
-    # System status check
-    if not check_system_status():
-        print("\n[ERROR] System is not healthy. Please check the errors above.")
+    args = parser.parse_args()
+
+    print_banner()
+
+    if args.install:
+        if check_installation():
+            print_success("\n🎉 Installation check passed! You're ready to go.")
+        else:
+            print_error("\n❌ Installation check failed. Please fix the issues above.")
         return
 
-    # API server check
-    api_running = check_api_server()
+    if args.health:
+        quick_health_check()
+        return
 
-    # Demo functionality
-    print("\n" + "=" * 50)
-    print("RUNNING FUNCTIONALITY DEMOS")
-    print("=" * 50)
+    if args.test:
+        run_integration_tests()
+        return
 
-    demo_success = True
-    demo_success &= demo_claim_submission()
-    demo_success &= demo_search_functionality()
+    if args.auto:
+        print_info("Running automatic demo...")
 
-    # Generate launch scripts
-    generate_launch_script()
+        # Installation check
+        if not check_installation():
+            return
 
-    # Final summary
-    print("\n" + "=" * 50)
-    print("DEMO SUMMARY")
-    print("=" * 50)
+        # Health check
+        health = quick_health_check()
 
-    system_health = "HEALTHY" if check_system_status() else "UNHEALTHY"
-    api_status = "RUNNING" if api_running else "STOPPED"
-    demo_status = "SUCCESS" if demo_success else "FAILED"
+        # Sample claim processing
+        claim_results = run_sample_claim_processing()
 
-    print(f"System Health: {system_health}")
-    print(f"API Server: {api_status}")
-    print(f"Functionality Demo: {demo_status}")
+        # Integration tests
+        test_results = run_integration_tests()
 
-    if system_health == "HEALTHY":
-        print("\n[SUCCESS] The AI Insurance Claims Processing System is ready!")
-        print("\nTo start the complete system:")
-        print("1. Backend: cd backend && python main.py")
-        print("2. Frontend: cd frontend && streamlit run ui.py")
-        print("3. Or use the launch scripts: start_system.sh (Linux/Mac) or start_system.bat (Windows)")
-        print("\nAccess the system at:")
-        print("- Frontend: http://localhost:8501")
-        print("- API: http://localhost:8000")
-        print("- API Docs: http://localhost:8000/docs")
-    else:
-        print("\n[ERROR] System is not ready. Please resolve the issues above.")
+        # Final summary
+        print_section("🎉 Demo Complete")
+        print_success("Automatic demo completed successfully!")
+        print_info("Try interactive mode with: python demo.py")
+
+        return
+
+    # Default: interactive mode
+    if not check_installation():
+        print_error("\nInstallation check failed. Please fix the issues before running the demo.")
+        return
+
+    interactive_menu()
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except KeyboardInterrupt:
+        print_success("\n\nDemo interrupted. Goodbye! 👋")
+    except Exception as e:
+        print_error(f"Demo failed: {e}")
+        print_info("For help, create an issue at: https://github.com/mrizvi96/AIGenesis/issues")
+
