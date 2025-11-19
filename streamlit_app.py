@@ -84,6 +84,10 @@ st.sidebar.info("🔍 Multimodal Processing: In progress")
 if 'qdrant_collection' not in st.session_state:
     st.session_state.qdrant_collection = False
 
+# Initialize claim number for tracking
+if 'current_claim_number' not in st.session_state:
+    st.session_state.current_claim_number = f"CLAIM-{datetime.now().strftime('%Y%m%d')}-{np.random.randint(1000, 9999)}"
+
 # Main content with comprehensive tabs
 tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs([
     "📄 Text Claims",
@@ -512,13 +516,11 @@ with tab3:
                     # Enhanced analysis for synthetic audio
                     st.markdown("### 🧠 Audio Intelligence Results")
 
-                    col1, col2, col3 = st.columns(3)
+                    col1, col2 = st.columns(2)
                     with col1:
-                        st.metric("Audio Quality", "Excellent")
+                        st.metric("Confidence", "94.2%")
                     with col2:
                         st.metric("Clarity", "98.5%")
-                    with col3:
-                        st.metric("Naturalness", "High")
 
                     # Claim type detection based on synthetic audio type
                     selected_audio = st.session_state.approved_content['audio'][selected_audio_index]
@@ -541,7 +543,7 @@ with tab3:
                         st.info("Special review protocol initiated")
 
                     st.success("✅ **Synthetic audio processed and integrated into claim workflow**")
-                    st.info(f"Audio ID: {st.session_state.selected_audio_id} linked to active claim")
+                    st.info(f"Audio ID: {st.session_state.selected_audio_id} linked to claim {st.session_state.current_claim_number}")
 
         else:
             st.warning("📋 No approved synthetic audio available")
@@ -1195,15 +1197,54 @@ with tab6:
 
             # Script templates based on type
             if audio_type == "Emergency Call":
-                default_script = "911 operator, I'm calling to report a medical emergency. My father is having severe chest pain and difficulty breathing. We're at 123 Main Street, please send an ambulance immediately!"
+                script_options = [
+                    "911 operator, I'm calling to report a medical emergency. My father is having severe chest pain and difficulty breathing. We're at 123 Main Street, please send an ambulance immediately!",
+                    "Hello 911? There's been a serious car accident on Highway 101 and Elm Street. Two vehicles involved, one person is unconscious. Please send police and paramedics right away!",
+                    "I need to report a fire at 456 Oak Avenue. The second floor of the apartment building is filling with smoke. People are evacuating but I think someone might still be trapped!",
+                    "Emergency! My child just fell from the playground equipment and isn't moving properly. We're at Riverside Park near the basketball courts. Please hurry!",
+                    "911, I'm witnessing a burglary in progress at 789 Commerce Street. Two people wearing dark clothing are breaking into the store through the back entrance."
+                ]
+                default_script = st.selectbox("Choose emergency scenario:", script_options)
+
             elif audio_type == "Claim Interview":
-                default_script = "I was driving home from work when another car ran a red light and hit my vehicle on the driver's side. I immediately felt neck pain and called for medical assistance."
+                script_options = [
+                    "I was driving home from work when another car ran a red light and hit my vehicle on the driver's side. I immediately felt neck pain and called for medical assistance.",
+                    "The accident happened around 3:30 PM yesterday during heavy rain. Another car slid through the intersection and crashed into my passenger door. My shoulder has been hurting ever since.",
+                    "I was parked outside the grocery store and when I came out, someone had backed into my car, causing significant damage to the front bumper. I have a witness who saw everything.",
+                    "The truck in front of me suddenly stopped without warning, and I couldn't brake in time. My car's front end is completely damaged, and I'm experiencing whiplash symptoms.",
+                    "I was making a left turn when a motorcycle tried to pass me on the left, resulting in a collision. The rider sustained injuries, and my car has considerable damage on the side."
+                ]
+                default_script = st.selectbox("Choose claim scenario:", script_options)
+
             elif audio_type == "Doctor Report":
-                default_script = "Patient presented with acute symptoms consistent with cardiac emergency. We performed immediate ECG and blood tests, confirming the need for emergency intervention."
+                script_options = [
+                    "Patient presented with acute symptoms consistent with cardiac emergency. We performed immediate ECG and blood tests, confirming the need for emergency intervention.",
+                    "The patient arrived via ambulance with multiple trauma injuries from a motor vehicle accident. CT scans revealed fractures and internal bleeding requiring immediate surgery.",
+                    "Examination shows the patient has sustained significant cervical strain following the incident yesterday. Range of motion is limited, and there's evidence of soft tissue damage.",
+                    "The patient presents with post-concussion syndrome after the fall. Symptoms include headache, dizziness, and memory issues. We've ordered imaging to rule out serious complications.",
+                    "X-ray results confirm a displaced fracture of the left radius requiring orthopedic consultation. The patient will need casting and physical therapy for recovery."
+                ]
+                default_script = st.selectbox("Choose medical scenario:", script_options)
+
             elif audio_type == "Witness Statement":
-                default_script = "I saw the entire accident happen. The blue sedan was speeding and clearly ran the red light before striking the other vehicle that was legally crossing the intersection."
+                script_options = [
+                    "I saw the entire accident happen. The blue sedan was speeding and clearly ran the red light before striking the other vehicle that was legally crossing the intersection.",
+                    "I was waiting at the bus stop when I heard a loud crash. The driver of the red car appeared to be texting and didn't notice the traffic had stopped ahead.",
+                    "From my apartment window, I saw someone vandalizing the parked cars on our street. They broke windows and slashed tires before running away.",
+                    "I was behind both vehicles when the accident occurred. The car that caused the collision never signaled and made an unsafe lane change without checking blind spots.",
+                    "The delivery truck was backing up without using its backup alarm, and it struck the pedestrian who was legally crossing the street in the crosswalk."
+                ]
+                default_script = st.selectbox("Choose witness scenario:", script_options)
+
             else:
-                default_script = "We noticed unusual patterns in this claim. Multiple claims from the same address within 30 days, inconsistent descriptions, and timestamps that don't match the reported timeline."
+                script_options = [
+                    "We noticed unusual patterns in this claim. Multiple claims from the same address within 30 days, inconsistent descriptions, and timestamps that don't match the reported timeline.",
+                    "The claimant's medical records show pre-existing conditions that contradict the claimed injuries from this incident. Further investigation is recommended.",
+                    "Surveillance footage from nearby businesses shows no activity at the reported time of the incident. The claim appears to be fraudulent.",
+                    "The submitted receipts and documentation contain discrepancies in dates and amounts that suggest potential falsification.",
+                    "The claimant's social media posts from the supposed injury date show them engaging in activities that contradict their reported limitations."
+                ]
+                default_script = st.selectbox("Choose investigation scenario:", script_options)
 
             custom_script = st.text_area(
                 "Custom Script (optional):",

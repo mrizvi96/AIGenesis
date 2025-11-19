@@ -1,0 +1,14 @@
+Defaulting to user installation because normal site-packages is not writeable
+Collecting pyttsx3
+  Downloading pyttsx3-2.99-py3-none-any.whl.metadata (6.2 kB)
+Collecting comtypes (from pyttsx3)
+  Downloading comtypes-1.4.13-py3-none-any.whl.metadata (7.2 kB)
+Collecting pypiwin32 (from pyttsx3)
+  Downloading pypiwin32-223-py3-none-any.whl.metadata (236 bytes)
+Requirement already satisfied: pywin32 in c:\users\hay info\appdata\roaming\python\python314\site-packages (from pyttsx3) (311)
+Downloading pyttsx3-2.99-py3-none-any.whl (32 kB)
+Downloading comtypes-1.4.13-py3-none-any.whl (254 kB)
+Downloading pypiwin32-223-py3-none-any.whl (1.7 kB)
+Installing collected packages: pypiwin32, comtypes, pyttsx3
+
+Successfully installed comtypes-1.4.13 pypiwin32-223 pyttsx3-2.99
