@@ -1000,129 +1000,72 @@ with tab6:
                 with st.spinner("🎙️ Generating text-to-speech audio..."):
                     time.sleep(2)  # Simulate generation time
 
-                    try:
-                        # Try to use pyttsx3 for offline TTS
-                        import pyttsx3
-                        import tempfile
-                        import base64
+                    # Generate real text-to-speech audio
+                    import pyttsx3
+                    import tempfile
+                    import base64
 
-                        # Initialize TTS engine
-                        engine = pyttsx3.init()
+                    # Initialize TTS engine
+                    engine = pyttsx3.init()
 
-                        # Set voice properties based on language and speed
-                        voices = engine.getProperty('voices')
+                    # Set voice properties based on language and speed
+                    voices = engine.getProperty('voices')
 
-                        # Try to set voice based on language
-                        if language == "Spanish" and len(voices) > 1:
-                            engine.setProperty('voice', voices[1].id)  # Usually second voice is Spanish
-                        elif language == "French" and len(voices) > 2:
-                            engine.setProperty('voice', voices[2].id)
-                        elif language == "German" and len(voices) > 3:
-                            engine.setProperty('voice', voices[3].id)
+                    # Try to set voice based on language
+                    if language == "Spanish" and len(voices) > 1:
+                        engine.setProperty('voice', voices[1].id)  # Usually second voice is Spanish
+                    elif language == "French" and len(voices) > 2:
+                        engine.setProperty('voice', voices[2].id)
+                    elif language == "German" and len(voices) > 3:
+                        engine.setProperty('voice', voices[3].id)
 
-                        # Set speech rate
-                        rate = engine.getProperty('rate')
-                        engine.setProperty('rate', int(rate * voice_speed))
+                    # Set speech rate
+                    rate = engine.getProperty('rate')
+                    engine.setProperty('rate', int(rate * voice_speed))
 
-                        # Create temporary file for audio
-                        with tempfile.NamedTemporaryFile(suffix='.wav', delete=False) as temp_file:
-                            temp_filename = temp_file.name
+                    # Create temporary file for audio
+                    with tempfile.NamedTemporaryFile(suffix='.wav', delete=False) as temp_file:
+                        temp_filename = temp_file.name
 
-                        # Save audio to temporary file
-                        engine.save_to_file(custom_script, temp_filename)
-                        engine.runAndWait()
+                    # Save audio to temporary file
+                    engine.save_to_file(custom_script, temp_filename)
+                    engine.runAndWait()
 
-                        # Read the audio file and encode to base64
-                        with open(temp_filename, 'rb') as audio_file:
-                            audio_bytes = audio_file.read()
-                            audio_base64 = base64.b64encode(audio_bytes).decode()
+                    # Read the audio file and encode to base64
+                    with open(temp_filename, 'rb') as audio_file:
+                        audio_bytes = audio_file.read()
+                        audio_base64 = base64.b64encode(audio_bytes).decode()
 
-                        # Clean up temporary file
-                        import os
-                        os.unlink(temp_filename)
+                    # Clean up temporary file
+                    import os
+                    os.unlink(temp_filename)
 
-                        # Calculate actual duration
-                        import wave
-                        with io.BytesIO(audio_bytes) as wav_buffer:
-                            with wave.open(wav_buffer, 'rb') as wav_file:
-                                frames = wav_file.getnframes()
-                                sample_rate = wav_file.getframerate()
-                                duration = frames / float(sample_rate)
+                    # Calculate actual duration
+                    import wave
+                    with io.BytesIO(audio_bytes) as wav_buffer:
+                        with wave.open(wav_buffer, 'rb') as wav_file:
+                            frames = wav_file.getnframes()
+                            sample_rate = wav_file.getframerate()
+                            duration = frames / float(sample_rate)
 
-                        # Generate audio data
-                        audio_data = {
-                            'id': f"AUD_{int(time.time())}",
-                            'type': audio_type,
-                            'script': custom_script[:200] + "..." if len(custom_script) > 200 else custom_script,
-                            'duration': f"{duration:.1f} seconds",
-                            'timestamp': datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                            'status': 'pending',
-                            'audio_data': audio_base64,
-                            'metadata': {
-                                'language': language,
-                                'speed': voice_speed,
-                                'word_count': len(custom_script.split()),
-                                'sample_rate': sample_rate,
-                                'format': 'WAV',
-                                'tts_engine': 'pyttsx3'
-                            }
+                    # Generate audio data
+                    audio_data = {
+                        'id': f"AUD_{int(time.time())}",
+                        'type': audio_type,
+                        'script': custom_script[:200] + "..." if len(custom_script) > 200 else custom_script,
+                        'duration': f"{duration:.1f} seconds",
+                        'timestamp': datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                        'status': 'pending',
+                        'audio_data': audio_base64,
+                        'metadata': {
+                            'language': language,
+                            'speed': voice_speed,
+                            'word_count': len(custom_script.split()),
+                            'sample_rate': sample_rate,
+                            'format': 'WAV',
+                            'tts_engine': 'pyttsx3'
                         }
-
-                    except Exception as tts_error:
-                        st.warning(f"TTS not available ({str(tts_error)}). Using fallback audio generation.")
-
-                        # Fallback to a simple synthetic audio that indicates the script content
-                        import numpy as np
-                        import wave
-                        import io
-                        import base64
-
-                        sample_rate = 22050
-                        duration = len(custom_script.split()) * 0.4  # Slightly longer duration
-                        t = np.linspace(0, duration, int(sample_rate * duration), False)
-
-                        # Generate different tones for different words to simulate speech patterns
-                        word_count = len(custom_script.split())
-                        frequencies = []
-                        for i, word in enumerate(custom_script.split()):
-                            word_freq = 150 + (i * 20) + (len(word) * 5)  # Different freq per word
-                            word_duration = duration / word_count
-                            word_t = np.linspace(0, word_duration, int(sample_rate * word_duration))
-                            word_freqs = np.full_like(word_t, word_freq) + np.sin(2 * np.pi * 10 * word_t) * 10
-                            frequencies.extend(word_freqs)
-
-                        frequencies = np.array(frequencies[:len(t)])  # Trim to match length
-                        audio_signal = np.sin(2 * np.pi * frequencies * t[:len(frequencies)]) * 0.3
-                        audio_signal = np.int16(audio_signal * 32767)
-
-                        # Convert to WAV bytes
-                        wav_buffer = io.BytesIO()
-                        with wave.open(wav_buffer, 'wb') as wav_file:
-                            wav_file.setnchannels(1)
-                            wav_file.setsampwidth(2)
-                            wav_file.setframerate(sample_rate)
-                            wav_file.writeframes(audio_signal.tobytes())
-
-                        wav_bytes = wav_buffer.getvalue()
-                        audio_base64 = base64.b64encode(wav_bytes).decode()
-
-                        audio_data = {
-                            'id': f"AUD_{int(time.time())}",
-                            'type': audio_type,
-                            'script': custom_script[:200] + "..." if len(custom_script) > 200 else custom_script,
-                            'duration': f"{duration:.1f} seconds",
-                            'timestamp': datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                            'status': 'pending',
-                            'audio_data': audio_base64,
-                            'metadata': {
-                                'language': language,
-                                'speed': voice_speed,
-                                'word_count': len(custom_script.split()),
-                                'sample_rate': sample_rate,
-                                'format': 'WAV',
-                                'tts_engine': 'fallback_synthetic'
-                            }
-                        }
+                    }
 
                     st.session_state.pending_content['audio'].append(audio_data)
                     st.success("✅ Audio generated and added to approval queue!")
