@@ -305,36 +305,125 @@ with tab2:
         else:
             st.info("Upload an image to see AI-powered document analysis")
 
+    # Add synthetic image integration
+    if st.session_state.get('approved_content', {}).get('images'):
+        st.markdown("---")
+        st.markdown("### 🖼️ **OR** Use Approved Synthetic Images")
+
+        # Create selection options for approved images
+        image_options = []
+        for i, img in enumerate(st.session_state.approved_content['images']):
+            image_options.append(f"Image #{i+1}: {img['type']}")
+
+        selected_image_index = st.selectbox(
+            "Select Synthetic Image:",
+            range(len(image_options)),
+            format_func=lambda x: image_options[x],
+            help="Choose an approved synthetic image to analyze"
+        )
+
+        if selected_image_index is not None:
+            selected_image = st.session_state.approved_content['images'][selected_image_index]
+
+            col1, col2 = st.columns(2)
+            with col1:
+                st.markdown("### 🖼️ Selected Synthetic Image")
+                st.image(f"data:image/png;base64,{selected_image['image_data']}",
+                        caption=f"Type: {selected_image['type']}", use_container_width=True)
+
+                if st.button("🔍 Analyze Synthetic Image", type="primary"):
+                    with st.spinner("🤖 AI analyzing synthetic image..."):
+                        time.sleep(2)
+
+                        # Mock OCR results based on image type
+                        if selected_image['type'] == "Medical Report":
+                            ocr_text = f"""
+                            EMERGENCY MEDICAL REPORT
+                            Patient: {selected_image.get('patient_name', 'John Doe')}
+                            Diagnosis: {selected_image.get('diagnosis', 'Acute Condition')}
+                            Doctor: {selected_image.get('doctor_name', 'Dr. Smith')}
+                            Date: {selected_image.get('approved_at', '2024-03-19')}
+                            Status: URGENT - Requires immediate attention
+                            """
+                            claim_type_detected = "Medical Emergency"
+                        elif selected_image['type'] == "Insurance Form":
+                            ocr_text = f"""
+                            {selected_image.get('form_type', 'CLAIM FORM')}
+                            Claim #: {selected_image.get('claim_number', 'AUTO-2024-001')}
+                            Date Filed: {selected_image.get('approved_at', '2024-03-19')}
+                            Status: Under Review
+                            Priority: High
+                            """
+                            claim_type_detected = "Insurance Claim"
+                        else:
+                            ocr_text = f"""
+                            {selected_image['type'].upper()}
+                            Generated: {selected_image.get('approved_at', '2024-03-19')}
+                            Document ID: {selected_image['id']}
+                            Status: Processed for Claim Analysis
+                            """
+                            claim_type_detected = "Document Evidence"
+
+                        st.session_state.image_ocr_text = ocr_text
+                        st.session_state.image_analyzed = True
+                        st.session_state.image_source = "synthetic"
+                        st.session_state.selected_image_id = selected_image['id']
+
+            with col2:
+                if st.session_state.get('image_analyzed') and st.session_state.get('image_source') == 'synthetic':
+                    st.markdown('<div class="info-box">🖼️ <strong>Synthetic Image Analysis Complete</strong></div>', unsafe_allow_html=True)
+
+                    ocr_text = st.session_state.image_ocr_text
+                    st.code(ocr_text, language='text')
+
+                    # Analysis results
+                    col1, col2 = st.columns(2)
+                    with col1:
+                        st.metric("Document Type", selected_image['type'])
+                        st.metric("Processing Time", "1.8 seconds")
+                    with col2:
+                        st.metric("Confidence", "94.2%")
+                        st.metric("Claim Type", claim_type_detected)
+
+                    st.success(f"✅ **{selected_image['type']} analyzed and linked to claim**")
+                    st.info(f"Image ID: {st.session_state.selected_image_id} integrated into workflow")
+                    st.info("Synthetic document provides supporting evidence for claim processing")
+
 with tab3:
     st.markdown("## 🎙️ Audio Processing & Speech Analysis")
 
-    col1, col2 = st.columns(2)
+    # Main audio processing options
+    option_tab1, option_tab2, option_tab3 = st.tabs(["📁 Upload Audio", "🎯 Use Synthetic Audio", "📊 Audio Analytics"])
 
-    with col1:
-        st.subheader("🎤 Upload Audio Recording")
-        uploaded_audio = st.file_uploader(
-            "Choose an audio file:",
-            type=['wav', 'mp3', 'm4a', 'ogg'],
-            help="Upload claim calls, witness statements, or voice recordings"
-        )
+    with option_tab1:
+        col1, col2 = st.columns(2)
 
-        if uploaded_audio:
-            st.audio(uploaded_audio, format='audio/wav')
+        with col1:
+            st.subheader("🎤 Upload Audio Recording")
+            uploaded_audio = st.file_uploader(
+                "Choose an audio file:",
+                type=['wav', 'mp3', 'm4a', 'ogg'],
+                help="Upload claim calls, witness statements, or voice recordings"
+            )
 
-            if st.button("🔍 Analyze Audio", type="primary"):
-                with st.spinner("🤖 AI processing audio..."):
-                    time.sleep(2.5)
+            if uploaded_audio:
+                st.audio(uploaded_audio, format='audio/wav')
 
-                    # Mock transcription
-                    transcription = """
-                    "Hello, I'm calling to report an accident that happened today
-                    around 2 PM at the intersection of Main Street and Oak Avenue.
-                    A blue sedan ran the red light and hit my car. I have neck
-                    pain and my car needs to be towed. The police are on site."
-                    """
+                if st.button("🔍 Analyze Audio", type="primary"):
+                    with st.spinner("🤖 AI processing audio..."):
+                        time.sleep(2.5)
 
-                    st.session_state.audio_transcription = transcription
-                    st.session_state.audio_analyzed = True
+                        # Mock transcription
+                        transcription = """
+                        "Hello, I'm calling to report an accident that happened today
+                        around 2 PM at the intersection of Main Street and Oak Avenue.
+                        A blue sedan ran the red light and hit my car. I have neck
+                        pain and my car needs to be towed. The police are on site."
+                        """
+
+                        st.session_state.audio_transcription = transcription
+                        st.session_state.audio_analyzed = True
+                        st.session_state.audio_source = "uploaded"
 
     with col2:
         st.subheader("📝 Speech Analysis")
@@ -363,6 +452,139 @@ with tab3:
 
         else:
             st.info("Upload an audio file to see speech recognition and analysis")
+
+    with option_tab2:
+        st.subheader("🎯 Use Approved Synthetic Audio")
+        st.markdown("Select from your approved synthetic audio files to process as claim evidence")
+
+        if st.session_state.get('approved_content', {}).get('audio'):
+            col1, col2 = st.columns(2)
+
+            with col1:
+                st.markdown("### 📋 Available Synthetic Audio")
+
+                # Create selection options
+                audio_options = []
+                for i, audio in enumerate(st.session_state.approved_content['audio']):
+                    audio_options.append(f"Audio #{i+1}: {audio['type']} ({audio['duration']})")
+
+                selected_audio_index = st.selectbox(
+                    "Select Audio File:",
+                    range(len(audio_options)),
+                    format_func=lambda x: audio_options[x],
+                    help="Choose an approved synthetic audio file to analyze"
+                )
+
+                if selected_audio_index is not None:
+                    selected_audio = st.session_state.approved_content['audio'][selected_audio_index]
+
+                    st.markdown("### 🎙️ Selected Audio Details")
+                    st.write(f"**Type:** {selected_audio['type']}")
+                    st.write(f"**Script:** {selected_audio['script']}")
+                    st.write(f"**Duration:** {selected_audio['duration']}")
+                    st.write(f"**Approved:** {selected_audio.get('approved_at', 'Unknown')}")
+
+                    # Play the selected audio
+                    if 'audio_data' in selected_audio:
+                        st.audio(f"data:audio/wav;base64,{selected_audio['audio_data']}", format="audio/wav")
+
+                    if st.button("🔍 Analyze Selected Audio", type="primary"):
+                        with st.spinner("🤖 AI processing synthetic audio..."):
+                            time.sleep(2)
+
+                            # Use the actual script from the synthetic audio
+                            transcription = selected_audio['script']
+
+                            st.session_state.audio_transcription = transcription
+                            st.session_state.audio_analyzed = True
+                            st.session_state.audio_source = "synthetic"
+                            st.session_state.selected_audio_id = selected_audio['id']
+
+            with col2:
+                st.subheader("📝 Synthetic Audio Analysis")
+
+                if st.session_state.get('audio_analyzed') and st.session_state.get('audio_source') == 'synthetic':
+                    st.markdown('<div class="info-box">🎙️ <strong>Synthetic Audio Analysis Complete</strong></div>', unsafe_allow_html=True)
+
+                    transcription = st.session_state.audio_transcription
+                    st.code(transcription, language='text')
+
+                    # Enhanced analysis for synthetic audio
+                    st.markdown("### 🧠 Audio Intelligence Results")
+
+                    col1, col2, col3 = st.columns(3)
+                    with col1:
+                        st.metric("Audio Quality", "Excellent")
+                    with col2:
+                        st.metric("Clarity", "98.5%")
+                    with col3:
+                        st.metric("Naturalness", "High")
+
+                    # Claim type detection based on synthetic audio type
+                    selected_audio = st.session_state.approved_content['audio'][selected_audio_index]
+                    audio_type = selected_audio['type']
+
+                    if audio_type == "Emergency Call":
+                        st.success("🚨 **Emergency claim detected** - Priority processing recommended")
+                        st.info("Audio indicates immediate medical attention required")
+                    elif audio_type == "Claim Interview":
+                        st.success("🚗 **Auto claim detected** from interview content")
+                        st.info("Collision details extracted for processing")
+                    elif audio_type == "Doctor Report":
+                        st.success("🏥 **Medical claim verified** from professional report")
+                        st.info("Clinical assessment supports claim validity")
+                    elif audio_type == "Witness Statement":
+                        st.success("👁️ **Witness evidence added** to claim file")
+                        st.info("Third-party testimony strengthens claim")
+                    else:
+                        st.success("🔍 **Investigation audio analyzed** for claim processing")
+                        st.info("Special review protocol initiated")
+
+                    st.success("✅ **Synthetic audio processed and integrated into claim workflow**")
+                    st.info(f"Audio ID: {st.session_state.selected_audio_id} linked to active claim")
+
+        else:
+            st.warning("📋 No approved synthetic audio available")
+            st.info("Go to **⚙️ Data Generation & Approval** tab to generate and approve synthetic audio first")
+
+    with option_tab3:
+        st.subheader("📊 Audio Analytics & Processing History")
+
+        # Display audio processing statistics
+        col1, col2, col3, col4 = st.columns(4)
+
+        with col1:
+            total_processed = len(st.session_state.get('approved_content', {}).get('audio', []))
+            st.metric("Audio Processed", total_processed)
+        with col2:
+            total_duration = sum(
+                float(audio.get('duration', '0').split()[0])
+                for audio in st.session_state.get('approved_content', {}).get('audio', [])
+            )
+            st.metric("Total Duration", f"{total_duration:.1f}s")
+        with col3:
+            st.metric("Avg Quality", "97.2%")
+        with col4:
+            st.metric("Success Rate", "100%")
+
+        if st.session_state.get('audio_analyzed'):
+            st.markdown("---")
+            st.subheader("🔍 Current Session Analysis")
+
+            col1, col2 = st.columns(2)
+            with col1:
+                st.write(f"**Source:** {st.session_state.get('audio_source', 'Unknown').title()}")
+                st.write(f"**Transcribed:** {'Yes' if st.session_state.get('audio_transcription') else 'No'}")
+            with col2:
+                if st.session_state.get('audio_source') == 'synthetic':
+                    st.write(f"**Audio ID:** {st.session_state.get('selected_audio_id', 'N/A')}")
+                    st.write(f"**Integration:** ✅ Claim Linked")
+
+            if st.session_state.get('audio_transcription'):
+                st.markdown("### 📝 Latest Transcription")
+                st.code(st.session_state.audio_transcription, language='text')
+        else:
+            st.info("📊 Upload or select audio to see detailed analytics")
 
 with tab4:
     st.markdown("## 🎥 Video Analysis & Scene Detection")
