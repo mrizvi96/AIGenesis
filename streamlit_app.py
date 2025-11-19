@@ -1000,18 +1000,58 @@ with tab6:
                 with st.spinner("🎙️ Generating synthetic audio..."):
                     time.sleep(1.5)  # Simulate generation time
 
-                    # Generate audio metadata (we'll use gTTS in real implementation)
+                    # Generate actual synthetic audio using numpy
+                    import numpy as np
+                    import wave
+                    import io
+                    import base64
+
+                    # Create synthetic audio tone with varying frequencies for speech-like effect
+                    sample_rate = 22050
+                    duration = len(custom_script.split()) * 0.3  # Duration based on word count
+                    t = np.linspace(0, duration, int(sample_rate * duration), False)
+
+                    # Generate speech-like frequencies (modulated sine waves)
+                    freq_base = np.random.uniform(150, 200)  # Base frequency for male/female voice
+                    frequencies = freq_base + np.random.uniform(-50, 50, len(t)) + np.sin(2 * np.pi * 2 * t) * 20
+
+                    # Create the audio signal
+                    audio_signal = np.sin(2 * np.pi * frequencies * t) * 0.3
+
+                    # Add envelope to make it sound more natural
+                    envelope = np.exp(-t * 0.5) * (1 + 0.5 * np.sin(2 * np.pi * 5 * t))
+                    audio_signal = audio_signal * envelope
+
+                    # Normalize to 16-bit PCM
+                    audio_signal = np.int16(audio_signal * 32767)
+
+                    # Convert to WAV bytes
+                    wav_buffer = io.BytesIO()
+                    with wave.open(wav_buffer, 'wb') as wav_file:
+                        wav_file.setnchannels(1)  # Mono
+                        wav_file.setsampwidth(2)  # 16-bit
+                        wav_file.setframerate(sample_rate)
+                        wav_file.writeframes(audio_signal.tobytes())
+
+                    # Encode to base64
+                    wav_bytes = wav_buffer.getvalue()
+                    audio_base64 = base64.b64encode(wav_bytes).decode()
+
+                    # Generate audio data
                     audio_data = {
                         'id': f"AUD_{int(time.time())}",
                         'type': audio_type,
                         'script': custom_script[:200] + "..." if len(custom_script) > 200 else custom_script,
-                        'duration': f"{len(custom_script.split()) * 0.3:.1f} seconds",  # Estimate duration
+                        'duration': f"{duration:.1f} seconds",
                         'timestamp': datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
                         'status': 'pending',
+                        'audio_data': audio_base64,
                         'metadata': {
                             'language': language,
                             'speed': voice_speed,
-                            'word_count': len(custom_script.split())
+                            'word_count': len(custom_script.split()),
+                            'sample_rate': sample_rate,
+                            'format': 'WAV'
                         }
                     }
 
@@ -1053,6 +1093,14 @@ with tab6:
                     col1, col2, col3 = st.columns([1, 2, 1])
                     with col1:
                         st.image(f"data:image/png;base64,{img['image_data']}", width=400, caption=f"Type: {img['type']}")
+
+                        # Add button to view full size
+                        if st.button(f"🔍 View Full Size", key=f"view_img_{i}"):
+                            st.session_state[f"show_large_img_{i}"] = not st.session_state.get(f"show_large_img_{i}", False)
+
+                        if st.session_state.get(f"show_large_img_{i}", False):
+                            with st.expander("🔍 Full-Size Image", expanded=True):
+                                st.image(f"data:image/png;base64,{img['image_data']}", use_column_width=True)
                     with col2:
                         st.write(f"**ID:** {img['id']}")
                         st.write(f"**Type:** {img['type']}")
@@ -1085,7 +1133,12 @@ with tab6:
                     col1, col2, col3 = st.columns([1, 2, 1])
                     with col1:
                         st.write(f"🎙️ **Audio Clip #{i+1}**")
-                        st.audio("data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSuBzvLZiTYIG2m98OScTgwOUarm7blmGAg+ltryxnkpBSl+zPLaizsIHGS47OihUBELTKXh8bllHgg8jdX1xn0vBSyIy/DYijEIHWq+8+OWT")
+                        # Use the generated audio data
+                        if 'audio_data' in audio:
+                            st.audio(f"data:audio/wav;base64,{audio['audio_data']}", format="audio/wav")
+                        else:
+                            # Fallback for older entries
+                            st.audio("data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSuBzvLZiTYIG2m98OScTgwOUarm7blmGAg+ltryxnkpBSl+zPLaizsIHGS47OihUBELTKXh8bllHgg8jdX1xn0vBSyIy/DYijEIHWq+8+OWT")
                     with col2:
                         st.write(f"**ID:** {audio['id']}")
                         st.write(f"**Type:** {audio['type']}")
